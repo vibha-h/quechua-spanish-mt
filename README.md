@@ -1,2 +1,2 @@
 # quechua-spanish-mt
-Human Language Technologies Quechua -> Spanish Machine Translation
+Human Language Technologies Spring 2025: Quechua -> Spanish Machine Translation
