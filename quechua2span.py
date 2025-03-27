@@ -34,8 +34,11 @@ tokenized_ds = ds.map(preprocess_function, batched=True)
 from transformers import DataCollatorForSeq2Seq
 data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)
 
-# %% Evaluate during training
-import evaluate
-metric = evaluate.load("sacrebleu")
+# %% Evaluate during training --> do we need to do this??
 
-# %% function that passes your predictions and labels to compute to calculate the SacreBLEU score
+# %% TRAIN
+from transformers import AutoModelForSeq2SeqLM
+checkpoint = "t5-small"
+model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint, force_download=True)
+
+# %%
