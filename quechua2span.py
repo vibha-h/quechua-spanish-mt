@@ -38,4 +38,4 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)
 import evaluate
 metric = evaluate.load("sacrebleu")
 
-# %%
+# %% function that passes your predictions and labels to compute to calculate the SacreBLEU score
