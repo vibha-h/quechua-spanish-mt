@@ -14,11 +14,11 @@ from transformers import AutoTokenizer
 checkpoint = "google-t5/t5-small"
 tokenizer = AutoTokenizer.from_pretrained(checkpoint) 
 
+# %%
 source_lang = "qu"
 target_lang = "es"
 prefix = "translate Quechua to Spanish: "
 
-# %%
 def preprocess_function(examples):
     inputs = [prefix + text for text in examples[source_lang]]
     targets = examples[target_lang]
