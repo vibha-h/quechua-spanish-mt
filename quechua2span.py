@@ -31,3 +31,11 @@ def preprocess_function(examples):
 tokenized_ds = ds.map(preprocess_function, batched=True)
 
 # %%
+from transformers import DataCollatorForSeq2Seq
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)
+
+# %% Evaluate during training
+import evaluate
+metric = evaluate.load("sacrebleu")
+
+# %%
