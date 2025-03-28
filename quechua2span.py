@@ -2,9 +2,8 @@
 from datasets import load_dataset
 ds = load_dataset("somosnlp-hackathon-2022/spanish-to-quechua")
 
-
 # %% Split the dataset into a train and test set with the train_test_split method:
-ds = ds["train"].train_test_split(test_size=0.2)
+ds = ds["train"].select(range(1000)).train_test_split(test_size=0.2)
 
 # %%
 ds["train"][10] 
@@ -78,5 +77,5 @@ text = "translate Quechua to Spanish: Jesusqa Isaiaspa nisqantam kay Pachapi Dio
 # Reference Translation: "Jesús cumplió de forma sorprendente esta profecía durante su ministerio."
 from transformers import pipeline
 
-translator = pipeline("translation_qu_to_es", model="trained_model")
+translator = pipeline("translation_qu_to_es", model="trained_model\checkpoint-100")
 translator(text)
