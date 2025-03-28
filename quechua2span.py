@@ -38,7 +38,45 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)
 
 # %% TRAIN
 from transformers import AutoModelForSeq2SeqLM
+from transformers import Seq2SeqTrainer
+from transformers import Seq2SeqTrainingArguments
 checkpoint = "t5-small"
 model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint, force_download=True)
 
 # %%
+training_args = Seq2SeqTrainingArguments(
+    output_dir="trained_model", 
+    eval_strategy="epoch",
+    learning_rate=2e-5,
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    weight_decay=0.01,
+    save_total_limit=3,
+    num_train_epochs=2,
+    predict_with_generate=True,
+    fp16=True, #change to bf16=True for XPU
+    push_to_hub=False,
+)
+
+# %%
+trainer = Seq2SeqTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_ds["train"],
+    eval_dataset=tokenized_ds["test"],
+    processing_class=tokenizer,
+    data_collator=data_collator,
+    #compute_metrics=compute_metrics,
+)
+
+# %%
+trainer.train()
+
+
+# %% Test translating a sentence
+text = "translate Quechua to Spanish: Jesusqa Isaiaspa nisqantam kay Pachapi Diospa munayninta ruraspan allinta cumplirqa."
+# Reference Translation: "Jesús cumplió de forma sorprendente esta profecía durante su ministerio."
+from transformers import pipeline
+
+translator = pipeline("translation_qu_to_es", model="trained_model")
+translator(text)
