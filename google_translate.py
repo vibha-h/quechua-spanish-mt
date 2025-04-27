@@ -18,17 +18,17 @@ phrases = [
     ("Imaynataq kachkan?", "¿Cómo está?")
 ]
 
-for idx, (source_text, gold_translation) in enumerate(phrases, start=1):
+for idx, (source_text, expected_translation) in enumerate(phrases, start=1):
     prompt = f"Translate the following phrase from Quechua to Spanish without any additional commentary, only the direct translation please:\n\n'{source_text}'"
     
     try:
-        response = model.generate_content([prompt])  # Make sure to wrap the prompt inside a list
-        model_translation = response.text.strip()
+        response = model.generate_content([prompt])
+        gemini_translation = response.text.strip()
         
         print(f"Phrase {idx}:")
         print(f"Quechua: {source_text}")
-        print(f"Expected Spanish: {gold_translation}")
-        print(f"Model Translation: {model_translation}")
+        print(f"Gemini Translation: {gemini_translation}")
+        print(f"Expected Spanish: {expected_translation}")
         print("-" * 10)
         
     except Exception as e:
