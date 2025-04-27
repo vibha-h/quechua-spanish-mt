@@ -1,35 +1,34 @@
-import google.generativeai as genai
+import sacrebleu
 
-genai.configure(api_key="")
-
-model_name = 'models/gemini-1.5-flash-latest'
-model = genai.GenerativeModel(model_name)
-
-phrases = [
-    ("ñuqa aycha-ta-m miku-ni", "yo como carne"),
-    ("Pitaq kanki?", "¿quién eres?"),
-    ("Yachay wasinchikpi", "En nuestra casa de estudios"),
-    ("Yachachiq yachachisqakunapas yachay wasi ukupi kachkanku.", "El profesor y sus alumnos están en el aula."),
-    ("Allinllam, yachachiqniy, qamrí?", "Estamos bien, mi profesor. ¿Y tú?"),
-    ("Ñuqataq San Isidropi tiyachkani.", "Yo, por mi parte, vivo en San Isidro."),
-    ("Ñuqaqa mamaypaq yanuqmi kani, qamrí, yaw Ricardo?", "Yo suelo cocinar para mi mamá, ¿y tú, oye, Ricardo?"),
-    ("Arí, ñuqaqa futbolpi pukllaqmi kani.", "Sí, yo suelo jugar fútbol."),
-    ("Haykaptaq qawaytarí tukunki?", "¿Cuándo vas a terminar la revista?"),
-    ("Imaynataq kachkan?", "¿Cómo está?")
+expected_translations = [
+    "yo como carne",
+    "¿quién eres?",
+    "En nuestra casa de estudios",
+    "El profesor y sus alumnos están en el aula.",
+    "Estamos bien, mi profesor. ¿Y tú?",
+    "Yo, por mi parte, vivo en San Isidro.",
+    "Yo suelo cocinar para mi mamá, ¿y tú, oye, Ricardo?",
+    "Sí, yo suelo jugar fútbol.",
+    "¿Cuándo vas a terminar la revista?",
+    "¿Cómo está?"
 ]
 
-for idx, (source_text, expected_translation) in enumerate(phrases, start=1):
-    prompt = f"Translate the following phrase from Quechua to Spanish without any additional commentary, only the direct translation please:\n\n'{source_text}'"
-    
-    try:
-        response = model.generate_content([prompt])
-        gemini_translation = response.text.strip()
-        
-        print(f"Phrase {idx}:")
-        print(f"Quechua: {source_text}")
-        print(f"Gemini Translation: {gemini_translation}")
-        print(f"Expected Spanish: {expected_translation}")
-        print("-" * 10)
-        
-    except Exception as e:
-        print(f"An error occurred for phrase {idx}: {e}")
+model_translations = [
+    "yo como carne",
+    "quien eres?",
+    "en nuestra casa de estudios",
+    "el profesor y sus alumnos están en el aula",
+    "estamos bien, mi profesor. y tú?",
+    "yo vivo en san isidro",
+    "yo cocino para mi mama, y tú, ricardo?",
+    "sí, juego fútbol",
+    "cuándo vas a terminar la revista?",
+    "cómo estás?"
+]
+
+for ref, model_output in zip(expected_translations, model_translations):
+    score = sacrebleu.sentence_chrf(model_output, [ref])
+    print(f"Reference: {ref}")
+    print(f"Model Output: {model_output}")
+    print(f"ChrF++ score: {score.score:.2f}")
+    print("-" * 10)
