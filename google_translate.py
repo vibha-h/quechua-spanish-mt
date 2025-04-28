@@ -30,5 +30,6 @@ for ref, model_output in zip(expected_translations, model_translations):
     score = sacrebleu.sentence_chrf(model_output, [ref])
     print(f"Reference: {ref}")
     print(f"Model Output: {model_output}")
+    print(f"BLEU score:" ,sentence_bleu(ref.split(), model_output.split()))
     print(f"ChrF++ score: {score.score:.2f}")
     print("-" * 10)
