@@ -25,11 +25,14 @@ model_translations = [
     "cuándo vas a terminar la revista?",
     "cómo estás?"
 ]
+avg_bleu = 0
 
 for ref, model_output in zip(expected_translations, model_translations):
     score = sacrebleu.sentence_chrf(model_output, [ref])
     print(f"Reference: {ref}")
     print(f"Model Output: {model_output}")
     print(f"BLEU score:" ,sentence_bleu(ref.split(), model_output.split()))
+    avg_bleu = avg_bleu + sentence_bleu(ref.split(), model_output.split())
     print(f"ChrF++ score: {score.score:.2f}")
     print("-" * 10)
+print(avg_bleu/10)
