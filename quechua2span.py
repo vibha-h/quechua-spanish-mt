@@ -10,8 +10,9 @@ ds["train"][10]
 
 # %% load a T5 tokenizer to process quechua-spanish pairs
 from transformers import AutoTokenizer
+model_path = "trained_model/checkpoint-2500"
 checkpoint = "google-t5/t5-small"
-tokenizer = AutoTokenizer.from_pretrained(checkpoint) 
+tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 # %%
 source_lang = "qu"
@@ -40,7 +41,7 @@ from transformers import AutoModelForSeq2SeqLM
 from transformers import Seq2SeqTrainer
 from transformers import Seq2SeqTrainingArguments
 checkpoint = "t5-small"
-model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint, force_download=True)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
 
 # %%
 training_args = Seq2SeqTrainingArguments(
@@ -77,6 +78,7 @@ text = "translate Quechua to Spanish: Jesusqa Isaiaspa nisqantam kay Pachapi Dio
 # Reference Translation: "Jesús cumplió de forma sorprendente esta profecía durante su ministerio."
 from transformers import pipeline
 
-translator = pipeline("translation_qu_to_es", model="trained_model/checkpoint-100")
+#translator = pipeline("translation_qu_to_es", model="trained_model/checkpoint-100")
+translator = pipeline("translation", model=model, tokenizer=tokenizer)
 result = translator(text, max_length=500) 
 print("Translation:", result[0]['translation_text'])
