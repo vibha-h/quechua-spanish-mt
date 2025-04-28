@@ -74,11 +74,41 @@ trainer.train()
 
 
 # %% Test translating a sentence
-text = "translate Quechua to Spanish: Jesusqa Isaiaspa nisqantam kay Pachapi Diospa munayninta ruraspan allinta cumplirqa."
+#text = "translate Quechua to Spanish: Jesusqa Isaiaspa nisqantam kay Pachapi Diospa munayninta ruraspan allinta cumplirqa."
 # Reference Translation: "Jesús cumplió de forma sorprendente esta profecía durante su ministerio."
 from transformers import pipeline
 
 #translator = pipeline("translation_qu_to_es", model="trained_model/checkpoint-100")
 translator = pipeline("translation_qu_to_es", model=model, tokenizer=tokenizer)
-result = translator(text, max_length=500) 
-print("Translation:", result[0]['translation_text'])
+#result = translator(text, max_length=500) 
+#print("Translation:", result[0]['translation_text'])
+
+#list of phrases (Quechua, Reference Spanish)
+phrases = [
+    ("ñuqa aycha-ta-m miku-ni", "yo como carne"),
+    ("Pitaq kanki?", "¿quién eres?"),
+    ("Yachay wasinchikpi", "En nuestra casa de estudios"),
+    ("Yachachiq yachachisqakunapas yachay wasi ukupi kachkanku.", "El profesor y sus alumnos están en el aula."),
+    ("Allinllam, yachachiqniy, qamrí?", "Estamos bien, mi profesor. ¿Y tú?"),
+    ("Ñuqataq San Isidropi tiyachkani.", "Yo, por mi parte, vivo en San Isidro."),
+    ("Ñuqaqa mamaypaq yanuqmi kani, qamrí, yaw Ricardo?", "Yo suelo cocinar para mi mamá, ¿y tú, oye, Ricardo?"),
+    ("Arí, ñuqaqa futbolpi pukllaqmi kani.", "Sí, yo suelo jugar fútbol."),
+    ("Haykaptaq qawaytarí tukunki?", "¿Cuándo vas a terminar la revista?"),
+    ("Imaynataq kachkan?", "¿Cómo está?")
+]
+
+translated_phrases = []
+
+for idx, (quechua_text, reference_spanish) in enumerate(phrases, start=1):
+    model_input = f"translate Quechua to Spanish: {quechua_text}"
+    #print(model_input)
+    machine_translation = translator(model_input, max_length=500)[0]['translation_text']
+    translated_phrases.append((quechua_text, machine_translation, reference_spanish))
+
+    print(f"Phrase {idx}:")
+    print(f"Quechua: {quechua_text}")
+    print(f"Machine Translation: {machine_translation}")
+    print(f"Reference Spanish: {reference_spanish}")
+    print()
+
+
